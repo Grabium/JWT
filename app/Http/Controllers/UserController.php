@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 //php artisan make:controller UserController --resource --api
 
@@ -15,7 +18,10 @@ class UserController extends Controller
    */
   public function index()
   {
-    return 'ok';
+    $msg = DB::table('users')
+      ->select('id', 'name')
+      ->get();
+    return response()->json(['msg' => $msg]);
   }
 
   /**
@@ -26,7 +32,9 @@ class UserController extends Controller
    */
   public function store(Request $request)
   {
-    //
+    $data    = $request->all();
+    $msg     = User::create($data);  //registro
+    return response()->json(['msg' => $msg]);
   }
 
   /**
@@ -37,7 +45,11 @@ class UserController extends Controller
    */
   public function show($id)
   {
-    //
+    $msg = User::findOrFail($id);
+    //$msg = DB::table('users')->select('id', 'email', 'info')->find($id);
+    //$msg = DB::table('users')->select('id', 'email', 'info')->where('name', $id)->first(); //achar pelo nome
+    return response()->json(['msg' => $msg]);
+    
   }
 
   /**
@@ -49,7 +61,10 @@ class UserController extends Controller
    */
   public function update(Request $request, $id)
   {
-    //
+    $data = $request->all();
+    $msg  = User::findOrFail($id);
+    $msg  = $msg->update($data);//boole
+    return response()->json(['msg' => $msg, 'data' => $data]);
   }
 
   /**
@@ -60,6 +75,8 @@ class UserController extends Controller
    */
   public function destroy($id)
   {
-    //
+    $msg = User::findOrFail($id);
+    $msg = $msg->delete();
+    return response()->json(['msg' => $msg ]);
   }
 }
