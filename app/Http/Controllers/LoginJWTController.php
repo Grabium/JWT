@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginJWTRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
@@ -13,24 +14,14 @@ class LoginJWTController extends Controller
     $this->guard = "api"; // add
   }
   
-  public function login(Request $request)
+  public function login(LoginJWTRequest $request)
   {
-    //var_dump($request->all());die();
-    /*
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|string',
-        'password' => 'required|string',
-    ]);
-    //var_dump($request->all());die();
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
-    */
-
+    $validated = $request->validated();
+    
     $user = User::where([
-        'email' => $request["email"],
+        'email' => $validated["email"],
         //'password' => md5($request->password)
-        'password' => $request["password"]
+        'password' => $validated["password"]
     ])->first();
     //var_dump($request->all(), $user["name"]);die();
     if (! $user ) return response()->json([ 'email' => ['Unauthorized = ! $user'] ], 401);
