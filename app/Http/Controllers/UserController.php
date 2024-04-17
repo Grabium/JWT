@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('jwtMiddleware', ['except' => ['store']]);
+    
+  }
   /**
    * Display a listing of the resource.
    *
@@ -61,6 +66,7 @@ class UserController extends Controller
    */
   public function update(Request $request, $id)
   {
+    echo "Chegou em update"; die();dd();
     $data = $request->all();
     $msg  = User::findOrFail($id);
     $msg  = $msg->update($data);//boole
