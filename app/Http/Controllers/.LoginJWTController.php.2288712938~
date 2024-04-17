@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class LoginJWTController extends Controller
+{
+  //Sem validação de entrada de cliente neste exemplo.
+  public function login(Request $request)
+  {
+    
+    $credentials = $request->only('email', 'password');
+    //$credentials = request(['email', 'password']);
+
+    print_r($credentials);/*
+    //auth() é um helper, attempt() faz a autenticação (verifica se são mesma linha)
+    if (! $token = (auth('api')->attempt($credentials))) {
+        return response()->json(['error' => 'Unauthorized', 'token' => $token], 401);
+    }
+*/
+    auth('api')->attempt($credentials);
+    return response()->json(['token' => $token]);
+    //return $this->respondWithToken($token);
+  }
+}

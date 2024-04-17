@@ -19,7 +19,7 @@ class UserController extends Controller
   public function index()
   {
     $msg = DB::table('users')
-      ->select('id', 'name')
+      ->select('id', 'email', 'password')
       ->get();
     return response()->json(['msg' => $msg]);
   }
