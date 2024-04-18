@@ -47,6 +47,7 @@ class UserController extends Controller
   public function show($id)
   {
     $msg = User::findOrFail($id);
+    //outras opções:
     //$msg = DB::table('users')->select('id', 'email', 'info')->find($id);
     //$msg = DB::table('users')->select('id', 'email', 'info')->where('name', $id)->first(); //achar pelo nome
     return response()->json(['msg' => $msg]);
