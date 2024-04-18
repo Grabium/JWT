@@ -13,7 +13,7 @@ class UserController extends Controller
 {
   public function __construct()
   {
-    $this->middleware('jwtMiddleware', ['except' => ['store']]);
+    $this->middleware('jwtMiddleware')->except('store');
     
   }
   /**
