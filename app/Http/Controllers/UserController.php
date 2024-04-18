@@ -11,11 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-  public function __construct()
-  {
-    $this->middleware('jwtMiddleware')->except('store');
-    
-  }
+  
   /**
    * Display a listing of the resource.
    *

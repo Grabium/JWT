@@ -12,10 +12,12 @@ class LoginJWTController extends Controller
   public function __construct()
   {
     $this->guard = "api"; // add
+    
   }
   
   public function login(LoginJWTRequest $request)
   {
+    
     $validated = $request->validated();
     
     $user = User::where([

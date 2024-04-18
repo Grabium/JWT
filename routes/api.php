@@ -11,7 +11,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 */
 //https://20c8f919-e5db-44a4-91f5-7069d08cf037-00-3asn5jy9t1ncf.worf.replit.dev/api/user
+Route::middleware('jwtMiddleware')->group(function (){
+  Route::resource('user', UserController::class);
+});
 
-Route::resource('/user', UserController::class);//protegido parcialmente por middleware no próprio controller.
 
-Route::post('/login', [LoginJWTController::class, 'login'])->name('login');
+Route::post('login', [LoginJWTController::class, 'login'])->name('login');

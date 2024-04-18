@@ -4,13 +4,15 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Http\Middleware\BaseMiddleware; //inserido manualmente
-//use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Http\Middleware\BaseMiddleware; 
+//inseridos manualmente:
 use Tymon\JWTAuth\Facades\JWTAuth;
+//use Illuminate\Support\Facades\Route;
 
-//extender BaseMiddleware
+//extender BaseMiddleware manualmente:
 class UserRoutesProtectedsMiddleware extends BaseMiddleware
 {
+  protected $openRoutes = ['user.store'];
   /**
    * JWTAuth::parseToken()->authenticate();
    * Irá buscar um cabeçalho da requisição:
@@ -20,8 +22,15 @@ class UserRoutesProtectedsMiddleware extends BaseMiddleware
    */
   public function handle(Request $request, Closure $next)
   {
-    //$header = $request->header('Authorization');//teste que captura o token.
-    //dump($header, $request->all()); die(); //não se esqueça que metodo get retorna vazio em $request->all()
+    $rota = $request->route()->getName();
+    
+    if(in_array($rota, $this->openRoutes)){
+      echo 'rota livre: '.$rota.'<br/>';
+      return $next($request);
+    }
+
+    echo 'rota mediada: '.$rota.'<br/>';
+
     try{
       $user = JWTAuth::parseToken()->authenticate();
     }catch(\Exception $e){
@@ -31,7 +40,7 @@ class UserRoutesProtectedsMiddleware extends BaseMiddleware
     if(! $user){
       return response()->json(['msg' => "if: usuário não definido"]);
     }
-    //dump($user); die();
+    
     return $next($request);
   }
 }
