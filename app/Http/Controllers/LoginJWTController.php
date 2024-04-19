@@ -19,22 +19,26 @@ class LoginJWTController extends Controller
   {
     
     $validated = $request->validated();
-    
-    $user = User::where([
-        'email' => $validated["email"],
-        //'password' => md5($request->password);
-        'password' => $validated["password"]
-    ])->first();
-    
-    if (! $user ){
+
+    //busca o email no DB
+    $mailUser = User::where(['email' => $validated["email"]])->first();
+
+    //verifica se a senha está correta. Acho mais seguro que verificar se NÃO está errada.
+    if(password_verify($validated["password"], $mailUser['password'])){
+      $user = $mailUser;
+      unset($mailUser);
+    }else{
       return response()->json([ 'email' => ['Unauthorized = ! $user'] ], 401);
     } 
 
+    
     if (! $token = auth( $this->guard )->login( $user ) ) {
       return response()->json([ 'email' => ['Unauthorized = ! $token'] ], 401);
+    }else{
+      return $this->respondWithToken($token);
     }
 
-    return $this->respondWithToken($token);
+    
   }
 
   //retorna novo token usando token anterior MAS VÁLIDO sem a necessidade de formulário:

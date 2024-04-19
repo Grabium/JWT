@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+  protected $options = ['cost' => 12];
   
   /**
    * Display a listing of the resource.
@@ -33,9 +34,10 @@ class UserController extends Controller
    */
   public function store(Request $request)
   {
-    $data    = $request->all();
-    $msg     = User::create($data);  //registro
-    return response()->json(['msg' => $msg]);
+    $request['password'] = password_hash($request['password'], PASSWORD_BCRYPT, $this->options);
+    //$data    = $request->all(); //apenas para controle maior e redirecionamento.
+    $msg = User::create($request->all());  //registro... 
+    return response()->json(['msg' => $msg]);//, 'pass' => $data['password']]);
   }
 
   /**
@@ -63,7 +65,6 @@ class UserController extends Controller
    */
   public function update(Request $request, $id)
   {
-    echo "Chegou em update"; die();dd();
     $data = $request->all();
     $msg  = User::findOrFail($id);
     $msg  = $msg->update($data);//boole
